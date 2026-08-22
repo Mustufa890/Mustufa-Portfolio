@@ -1,80 +1,76 @@
-"use client"
-import { contactUser } from '@/Api/axios'
-import React, { useState } from 'react'
+"use client";
 
-const Contact = () => {
-    const [form, setForm] = useState({
-    name:'',
-    email:'',
-    message:''    
-    })
+import { useState } from "react";
 
-    const handleSubmit = async (e)=>{
-        e.preventDefault()
-        try {
-        const res = await contactUser(form)
-        alert("Form Submit Successfull")    
-        } catch (err) {
-        console.log(err);
-        alert("Error went Wrong ")    
-        }
-    }
+export default function ContactForm() {
+  const [result, setResult] = useState("");
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+
+    formData.append(
+      "access_key",
+      "bd4dd274-1ce8-421d-a271-09c54dfbd380"
+    );
+
+    const response = await fetch(
+      "https://api.web3forms.com/submit",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+
+    console.log(data);
+
+    setResult(data.success ? "Success!" : data.message);
+  };
+
   return (
   <>
-   <section id='Contact' >
-    <div className="justify-center" >
-       <p className="text-center text-2xl font-bold text-blue-500" >Get in Touch</p>
-    <h2 className="mt-2 text-6xl font-bold sm:text-5xl text-center" >Contact</h2>
-    <br/>
-    <p className="mx-auto max-w-2xl text-center text-sm leading-6 text-gray-600 sm:text-base sm:leading-7 md:text-lg">
-  Have a project in mind or want to work together? Feel free to reach out. I’d love to hear from you.
-</p>
-
-    </div>
-   <form
-  onSubmit={handleSubmit}
-  className="mx-auto w-full max-w-xl space-y-5 rounded-2xl border border-gray-200 bg-white p-6 shadow-lg sm:p-8"
+  <h2 className="text-center text-4xl font-bold">Contact</h2>
+<form
+  onSubmit={onSubmit}
+  className="mx-auto flex w-full max-w-md flex-col gap-4"
 >
   <input
     type="text"
     name="name"
-    placeholder="Enter your Name"
-    onChange={(e) =>
-      setForm({ ...form, name: e.target.value })
-    }
-    className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 sm:text-base"
+    placeholder="name"
+    required
+    className="rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
   />
 
   <input
     type="email"
     name="email"
-    placeholder="Enter your Email"
-    onChange={(e) =>
-      setForm({ ...form, email: e.target.value })
-    }
-    className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 sm:text-base"
+    placeholder="email"
+    required
+    className="rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
   />
 
-  <input
-    type="text"
+  <textarea
     name="message"
-    placeholder="Enter your Message"
-    onChange={(e) =>
-      setForm({ ...form, message: e.target.value })
-    }
-    className="w-full rounded-xl border border-gray-300 px-4 py-8 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 sm:text-base"
+    placeholder="message"
+    required
+    className="min-h-32 resize-none rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
   />
 
   <button
     type="submit"
-    className="w-full rounded-xl bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-700 active:scale-[0.98] sm:w-auto"
+    className="rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition hover:bg-blue-700"
   >
-    Send
+    Submit
   </button>
-</form>
-    </section>
-  </> 
-  )
-}
 
-export default Contact
+  <p className="text-center text-sm text-green-600">
+    {result}
+  </p>
+</form>
+</>
+  );
+}
