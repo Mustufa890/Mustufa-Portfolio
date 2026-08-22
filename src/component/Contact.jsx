@@ -32,6 +32,7 @@ export default function ContactForm() {
 
   return (
   <>
+  <section id="Contact" >
   <h2 className="text-center text-4xl font-bold">Contact</h2>
 <form
   onSubmit={onSubmit}
@@ -71,6 +72,7 @@ export default function ContactForm() {
     {result}
   </p>
 </form>
+</section>
 </>
   );
 }
